@@ -1,0 +1,22 @@
+<mvc:View controllerName="com.bolam.zptv_bolam_approval.controller.ApprovalHome" xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
+	xmlns="sap.m" xmlns:core="sap.ui.core">
+	<Shell id="shell">
+		<App id="app">
+			<pages>
+				<Page id="page" title="{i18n>title}">
+					<content>
+						<core:Fragment fragmentName="com.bolam.zptv_bolam_approval.fragments.approvalTable" type="XML"/>
+					</content>
+					<footer>
+						<OverflowToolbar id="otbFooter">
+							<ToolbarSpacer/>
+							<Button type="Accept" text="Submit" press="onFilesSubmitReq">
+								<layoutData><OverflowToolbarLayoutData priority="NeverOverflow"/></layoutData>
+							</Button>
+						</OverflowToolbar>
+					</footer>
+				</Page>
+			</pages>
+		</App>
+	</Shell>
+</mvc:View>
