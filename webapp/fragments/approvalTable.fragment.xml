@@ -6,7 +6,7 @@
 			</Column>
 			<Column width="5em">
 				<Text text="Records Count"/>
-			</Column>
+			</Column> 
 			<Column width="10em">
 				<Text text="Date"/>
 			</Column>

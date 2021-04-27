@@ -6,7 +6,7 @@ sap.ui.define([
 	"sap/m/Button",
 	"sap/m/ButtonType",
 	"sap/m/Label",
-	"sap/m/MessageToast",
+	"sap/m/MessageToast", 
 	"sap/m/Text",
 	"sap/m/HBox"
 ], function (Controller, ValueState, Dialog, DialogType, Button, ButtonType, Label, MessageToast, Text, HBox) {
