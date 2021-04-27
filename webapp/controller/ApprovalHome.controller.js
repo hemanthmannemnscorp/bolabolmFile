@@ -14,7 +14,7 @@ sap.ui.define([
 
 	return Controller.extend("com.bolam.zptv_bolam_approval.controller.ApprovalHome", {
 		onInit: function () {
-			this.onReadTable();
+			this.onReadTable(); 
 		},
 		onReadTable: function () {
 
