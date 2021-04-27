@@ -1,5 +1,6 @@
 sap.ui.define([
 	"sap/ui/core/mvc/Controller",
+	"sap/ui/core/ValueState",
 	"sap/m/Dialog",
 	"sap/m/DialogType",
 	"sap/m/Button",
@@ -8,15 +9,15 @@ sap.ui.define([
 	"sap/m/MessageToast",
 	"sap/m/Text",
 	"sap/m/HBox"
-], function (Controller, Dialog, DialogType, Button, ButtonType, Label, MessageToast, Text, HBox) {
+], function (Controller, ValueState, Dialog, DialogType, Button, ButtonType, Label, MessageToast, Text, HBox) {
 	"use strict";
 
 	return Controller.extend("com.bolam.zptv_bolam_approval.controller.ApprovalHome", {
 		onInit: function () {
 			this.onReadTable();
 		},
-		onReadTable:function(){
-			
+		onReadTable: function () {
+
 			var oTable = this.getView().byId("idFileApprovalTable");
 			var oModel = this.getView().getModel("fileListModel");
 			var oJSONModel = this.getView().getModel("oFileMainModelJSON");
@@ -28,87 +29,113 @@ sap.ui.define([
 				}
 			})
 
-		
 		},
 		onFilesSubmitReq: function () {
 
 			var oData = this.getView().byId("idFileApprovalTable").getModel().getData();
 			var approveCount = 0;
 			var denyCount = 0;
+			var denyind = false; //added
 			this._oData = oData;
 			for (var i = 0; i < oData.length; i++) {
+				var denyNotes = ""; //added
 				if (oData[i].Approve == true) {
 					approveCount = approveCount + 1;
 				}
 				if (oData[i].Deny == true) {
 					denyCount = denyCount + 1;
+					var denyNotes = oData[i].Notes; // added below
+					if (denyNotes === "") {
+						denyind = true;
+						if (!this.oErrorMessageDialog) {
+							this.oErrorMessageDialog = new Dialog({
+								type: DialogType.Message,
+								title: "Error",
+								state: ValueState.Error,
+								content: new Text({
+									text: "Please add Reason for Denial."
+								}),
+								beginButton: new Button({
+									type: ButtonType.Emphasized,
+									text: "OK",
+									press: function () {
+										this.oErrorMessageDialog.close();
+									}.bind(this)
+								})
+							});
+						}
+
+						this.oErrorMessageDialog.open();
+					}
 				}
 			}
-			this.oApproveDialog = new Dialog({
-				type: DialogType.Message,
-				title: "Save & Submit Information?",
-				content: [
-					new HBox({
-						items: [
-							new Label({
-								text: "You are about to submit:"
-							})
-						]
+			if (denyind == false) {
+				this.oApproveDialog = new Dialog({
+					type: DialogType.Message,
+					title: "Save & Submit Information?",
+					content: [
+						new HBox({
+							items: [
+								new Label({
+									text: "You are about to submit:"
+								})
+							]
+						}),
+						new HBox({
+							items: [
+								new Label({
+									text: approveCount + " Approved Files"
+								}).addStyleClass("bulletlist")
+							]
+						}),
+						new HBox({
+							items: [
+								new Label({
+									text: denyCount + " Denied Files"
+								}).addStyleClass("bulletlist")
+							]
+						}),
+						new HBox({
+							items: [
+								new Label({
+									text: ""
+								})
+							]
+						}),
+						new HBox({
+							items: [
+								new Label({
+									text: "Are you sure you would like to save and submit the information "
+								})
+							]
+						}),
+						new HBox({
+							items: [
+								new Label({
+									text: "from this session?"
+								})
+							]
+						})
+					],
+					beginButton: new Button({
+						type: ButtonType.Emphasized,
+						text: "Yes",
+						press: function () {
+							// MessageToast.show("Submit pressed!");
+							this.onApproveYesPress();
+							this.oApproveDialog.close();
+						}.bind(this)
 					}),
-					new HBox({
-						items: [
-							new Label({
-								text: approveCount + " Approved Files"
-							}).addStyleClass("bulletlist")
-						]
-					}),
-					new HBox({
-						items: [
-							new Label({
-								text: denyCount + " Denied Files"
-							}).addStyleClass("bulletlist")
-						]
-					}),
-					new HBox({
-						items: [
-							new Label({
-								text: ""
-							})
-						]
-					}),
-					new HBox({
-						items: [
-							new Label({
-								text: "Are you sure you would like to save and submit the information "
-							})
-						]
-					}),
-					new HBox({
-						items: [
-							new Label({
-								text: "from this session?"
-							})
-						]
+					endButton: new Button({
+						text: "Cancel",
+						press: function () {
+							this.oApproveDialog.close();
+						}.bind(this)
 					})
-				],
-				beginButton: new Button({
-					type: ButtonType.Emphasized,
-					text: "Yes",
-					press: function () {
-						// MessageToast.show("Submit pressed!");
-						this.onApproveYesPress();
-						this.oApproveDialog.close();
-					}.bind(this)
-				}),
-				endButton: new Button({
-					text: "Cancel",
-					press: function () {
-						this.oApproveDialog.close();
-					}.bind(this)
-				})
-			});
+				});
 
-			this.oApproveDialog.open();
+				this.oApproveDialog.open();
+			}
 		},
 		onApproveYesPress: function () {
 			var oData = this._oData;
@@ -127,7 +154,7 @@ sap.ui.define([
 					"Notes": oData[i].Notes,
 					"Pernr": "",
 					"Dateap": oDate,
-					"Timeap": oTime, 
+					"Timeap": oTime,
 					"Type": oData[i].Type
 				};
 				oPostJSONItem.push(oPostJSONLocal);

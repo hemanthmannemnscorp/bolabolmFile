@@ -1,5 +1,5 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
-	<Table inset="false" items="{ path: '/' }" id="idFileApprovalTable">
+	<Table inset="false" items="{ path: '/' }" id="idFileApprovalTable" sticky="ColumnHeaders">
 		<columns>
 			<Column width="18em">
 				<Text text="File Name"/>
@@ -30,9 +30,9 @@
 					<Text text="{Count}"/>
 					<Text text="{ path: 'Date', type: 'sap.ui.model.odata.type.DateTime', constraints : {displayFormat: 'Date'} }"/>
 					<Text text="{ path: 'Time', type: 'sap.ui.model.odata.type.Time', formatOptions: { style: 'medium' } }"/>
-					<RadioButton groupName="{File}" selected="{Approve}"/>
-					<RadioButton groupName="{File}" selected="{Deny}"/>
-					<Input value="{Notes}" type="{Text}" maxLength="100"/>
+					<RadioButton groupName="{File}" selected="{Approve}" />
+					<RadioButton groupName="{File}" selected="{Deny}"  /> 
+					<Input  value="{Notes}" type="{Text}" maxLength="100"/> 
 				</cells>
 			</ColumnListItem>
 		</items>
